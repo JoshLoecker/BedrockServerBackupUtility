@@ -152,7 +152,6 @@ def rclone_upload() -> bool:
 
 
 if __name__ == '__main__':
-    print("HERE")
     # These values SHOULD be modified before running the server
     server_name: str = "bedrock-server"
     backup_path: str = os.path.expanduser("~/projects/bedrock-server/backups")
