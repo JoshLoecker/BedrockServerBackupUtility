@@ -1,3 +1,4 @@
+from typing import Dict
 import os
 import pathlib
 import pexpect
@@ -61,7 +62,7 @@ def query_save_server(child: pexpect.pty_spawn.spawn) -> str:
     return save_query_result
 
 
-def get_files_dictionary(query_result: str) -> dict[str:int]:
+def get_files_dictionary(query_result: str) -> Dict[str, int]:
     """
     This function will produce a dictionary of file names and byte values to read
 
@@ -113,7 +114,7 @@ def create_directory(item_path: str, file_name_included: bool = True):
     os.makedirs(directory_path, exist_ok=True)
 
 
-def write_backups(files_dict: dict[str:int]):
+def write_backups(files_dict: Dict[str,int]):
     """
     Write files to the _Constants().rclone_path location
 
@@ -150,17 +151,11 @@ def rclone_upload() -> bool:
         return False
 
 
-def main():
-    constants = _Constants()
-    print(constants.server_name)
-
-    exit(0)
-
-
 if __name__ == '__main__':
+    print("HERE")
     # These values SHOULD be modified before running the server
     server_name: str = "bedrock-server"
-    backup_path: str = os.path.expanduser("~/projects/bedrock-server/")
+    backup_path: str = os.path.expanduser("~/projects/bedrock-server/backups")
     log_file: str = os.path.expanduser("~/projects/bedrock-server/log.txt")
     rclone_sync_path: str = "onedrive:rclone/backup/bedrock-server/"
 
@@ -170,6 +165,7 @@ if __name__ == '__main__':
     rclone_config: str = os.path.expanduser("~/.config/rclone/rclone.conf")
 
     path = pathlib.Path(worlds_path)
+
     child: pexpect.pty_spawn.spawn = pexpect.spawn(docker_attach)
     query_result: str = query_save_server(child)
     files_list = get_files_dictionary(query_result)
