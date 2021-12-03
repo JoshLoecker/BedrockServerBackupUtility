@@ -52,7 +52,7 @@ def query_save_server(child: pexpect.pty_spawn.spawn) -> str:
     save_query_result: str = child.after.decode()
 
     child.sendline("save resume")
-    child.expect(["Changes to the level are resumed.", "A previous save has not been completed."])
+    child.expect(["Changes to the world are resumed.", "A previous save has not been completed."])
 
     child.sendcontrol("p")
     child.sendcontrol("q")
@@ -153,9 +153,10 @@ def rclone_upload() -> bool:
 
 if __name__ == '__main__':
     # These values SHOULD be modified before running the server
-    server_name: str = "bedrock-server"
-    backup_path: str = os.path.expanduser("~/projects/bedrock-server/backups")
-    log_file: str = os.path.expanduser("~/projects/bedrock-server/log.txt")
+    server_name: str = "survival"
+    backup_path: str = os.path.expanduser("/tmp/bedrock-server/backups")
+    #backup_path: str = os.path.expanduser("~/projects/bedrock-server/backups")
+    log_file: str = os.path.expanduser("~/log.txt")
     rclone_sync_path: str = "onedrive:rclone/backup/bedrock-server/"
 
     # These values SHOULD NOT be modified before running the server
@@ -166,10 +167,19 @@ if __name__ == '__main__':
     path = pathlib.Path(worlds_path)
 
     child: pexpect.pty_spawn.spawn = pexpect.spawn(docker_attach)
+    Logging.log_to_screen("Attached to docker container")
+
     query_result: str = query_save_server(child)
+    Logging.log_to_screen("Queried server for files")
+
     files_list = get_files_dictionary(query_result)
+    Logging.log_to_screen("Collected files list")
+
+    Logging.log_to_screen("Writing to temporary files")
     write_backups(files_list)
 
+    Logging.log_to_screen("Starting upload. . .")
     rclone_upload()
+    Logging.log_to_screen("Finished upload")
 
     Logging.log_to_screen("Done")
