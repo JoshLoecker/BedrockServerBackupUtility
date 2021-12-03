@@ -123,7 +123,7 @@ def write_backups(files_dict: Dict[str,int]):
     """
     for i, file_name in enumerate(files_dict):
 
-        save_file_path: os.path = os.path.join(backup_path, file_name)
+        save_file_path: os.path = os.path.join(temp_backup_path, file_name)
         create_directory(save_file_path, True)
 
         read_file_path: os.path = os.path.join(path, file_name)
@@ -145,16 +145,22 @@ def rclone_upload() -> bool:
         cfg: str = i_stream.read()
 
     result = rclone.with_config(cfg)
-    if result.sync(backup_path, rclone_sync_path):
+    if result.sync(temp_backup_path, rclone_sync_path):
         return True
     else:
         return False
+    
+def remove_temp_backup_path(backup_path: str):
+    """
+    Remove the temporary files that exist at the backup path location
+    """
+    os.rmdir(os.path.expanduser(backup_path))
 
 
 if __name__ == '__main__':
     # These values SHOULD be modified before running the server
     server_name: str = "survival"
-    backup_path: str = os.path.expanduser("/tmp/bedrock-server/backups")
+    temp_backup_path: str = os.path.expanduser("/tmp/bedrock-server/backups")
     #backup_path: str = os.path.expanduser("~/projects/bedrock-server/backups")
     log_file: str = os.path.expanduser("~/log.txt")
     rclone_sync_path: str = "onedrive:rclone/backup/bedrock-server/"
