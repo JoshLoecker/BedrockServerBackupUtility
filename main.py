@@ -4,7 +4,7 @@ import pathlib
 import pexpect
 import rclone
 import docker
-
+import shutil
 
 class Logging:
     """
@@ -149,21 +149,28 @@ def rclone_upload() -> bool:
         return True
     else:
         return False
-    
+
 def remove_temp_backup_path(backup_path: str):
     """
     Remove the temporary files that exist at the backup path location
     """
-    os.rmdir(os.path.expanduser(backup_path))
+    shutil.rmtree(os.path.expanduser(backup_path))
 
 
 if __name__ == '__main__':
     # These values SHOULD be modified before running the server
     server_name: str = "survival"
-    temp_backup_path: str = os.path.expanduser("/tmp/bedrock-server/backups")
+    temp_backup_path: str = os.path.expanduser("/tmp/bedrock-server-backups")
+    log_file: str = os.path.expanduser("/var/log/minecraft_backup/log.txt")
+    rclone_sync_path: str = "onedrive:rclone/backup/bedrock-server/"
+
+
+    server_name: str = "survival"
+    backup_path: str = os.path.expanduser("/tmp/bedrock-server/backups")
     #backup_path: str = os.path.expanduser("~/projects/bedrock-server/backups")
     log_file: str = os.path.expanduser("~/log.txt")
     rclone_sync_path: str = "onedrive:rclone/backup/bedrock-server/"
+
 
     # These values SHOULD NOT be modified before running the server
     worlds_path: str = get_server_binds()
@@ -187,5 +194,7 @@ if __name__ == '__main__':
     Logging.log_to_screen("Starting upload. . .")
     rclone_upload()
     Logging.log_to_screen("Finished upload")
+
+    remove_temp_backup_path(temp_backup_path)
 
     Logging.log_to_screen("Done")
