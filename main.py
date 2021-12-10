@@ -175,6 +175,9 @@ def rename_backup_folder() -> str:
     new_folder_name = f"{year}-{month}-{day}-{previous_folder_name}"
     new_folder_path = os.path.join(temp_backup_path, new_folder_name)
 
+    print(f"Previous: {previous_folder_path}")
+    print(f"New: {new_folder_path}")
+
     shutil.move(previous_folder_path, new_folder_path)
 
     return new_folder_path
