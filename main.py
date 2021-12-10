@@ -208,7 +208,7 @@ if __name__ == '__main__':
     query_result: str = query_save_server(child)
     files_list = get_files_dictionary(query_result)
     write_backups(files_list)
-    temp_zip_file = zip_temp_backup()
+    temp_zip_file = rename_backup_folder()
     print(temp_zip_file)
 
     # rclone_upload(temp_zip_file)
