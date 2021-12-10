@@ -167,8 +167,6 @@ def rename_backup_folder() -> str:
     month = f"{curr_date.month:02d}"
     day = f"{curr_date.day:02d}"
 
-    backup_name = os.listdir(temp_backup_path)
-
     previous_folder_name = os.listdir(temp_backup_path)[0]
     previous_folder_path = os.path.join(temp_backup_path, previous_folder_name)
 
@@ -208,9 +206,9 @@ if __name__ == '__main__':
     query_result: str = query_save_server(child)
     files_list = get_files_dictionary(query_result)
     write_backups(files_list)
-    temp_zip_file = rename_backup_folder()
-    print(temp_zip_file)
+    renamed_backup_path = rename_backup_folder()
+    print(renamed_backup_path)
 
-    # rclone_upload(temp_zip_file)
+    rclone_upload(temp_zip_file)
     # remove_temp_backup_path(temp_backup_path)
 
