@@ -1,10 +1,11 @@
-from typing import Dict
+import datetime
+import docker
 import os
 import pathlib
 import pexpect
 import rclone
-import docker
 import shutil
+from typing import Dict
 
 
 class Logging:
@@ -50,8 +51,6 @@ def query_save_server(child: pexpect.pty_spawn.spawn) -> str:
     child.sendline("save query")
     child.expect(["Data .+\n.+"])
     save_query_result: str = child.after.decode()
-    print("HERE")
-    print(save_query_result)
 
     child.sendline("save resume")
     child.expect(["Changes to the world are resumed.", "A previous save has not been completed."])
@@ -118,7 +117,7 @@ def create_directory(item_path: str, file_name_included: bool = True):
 
 def write_backups(files_dict: Dict[str, int]):
     """
-    Write files to the _Constants().rclone_path location
+    Write files to the temp_backup_path location
 
     :param files_dict: A dictionary containing input file paths as the keys and bytes to read as values
     :return: None
@@ -140,17 +139,39 @@ def write_backups(files_dict: Dict[str, int]):
 
 def rclone_upload() -> bool:
     """
-    Upload items in the _Constants().backup_path to the _Constants().rclone_path path
+    Upload items in the temp_backup_path to the rclone_path path
     :return: True if upload successful, otherwise False
     """
     with open(rclone_config, "r") as i_stream:
         cfg: str = i_stream.read()
 
     result = rclone.with_config(cfg)
-    if result.sync(temp_backup_path, rclone_sync_path):
+    if result.sync(temp_zip_file, rclone_sync_path):
         return True
     else:
         return False
+
+
+def zip_temp_backup() -> str:
+    """
+    This function will zip the folder under the temp_backup_path
+    After doing so, it will save the file in the following format
+        YYYY-MM-DD-[FOLDER NAME].zip
+
+    It will return a string of the new file path
+    """
+    curr_date = datetime.date.today()
+    year = str(curr_date.year)
+    month = f"{curr_date.month:02d}"
+    day = f"{curr_date.day:02d}"
+
+    backup_name = os.listdir(temp_backup_path)
+
+    file_name = f"{year}-{month}-{day}-{backup_name[0]}"
+
+    zip_file_name = os.path.join(temp_backup_path, file_name)
+    shutil.make_archive(zip_file_name, "zip", temp_backup_path)
+    return f"{zip_file_name}.zip"
 
 
 def remove_temp_backup_path(backup_path: str):
@@ -186,6 +207,8 @@ if __name__ == '__main__':
 
     Logging.log_to_screen("Writing to temporary files")
     write_backups(files_list)
+
+    temp_zip_file = zip_temp_backup()
 
     Logging.log_to_screen("Starting upload. . .")
     rclone_upload()
