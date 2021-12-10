@@ -6,6 +6,7 @@ import rclone
 import docker
 import shutil
 
+
 class Logging:
     """
     A simple logging class to write things to the screen or to the log file
@@ -33,7 +34,6 @@ def get_server_binds() -> str:
 
     mount_point = os.path.join(mount_point, "worlds")
     return mount_point
-
 
 
 def query_save_server(child: pexpect.pty_spawn.spawn) -> str:
@@ -114,7 +114,7 @@ def create_directory(item_path: str, file_name_included: bool = True):
     os.makedirs(directory_path, exist_ok=True)
 
 
-def write_backups(files_dict: Dict[str,int]):
+def write_backups(files_dict: Dict[str, int]):
     """
     Write files to the _Constants().rclone_path location
 
@@ -150,6 +150,7 @@ def rclone_upload() -> bool:
     else:
         return False
 
+
 def remove_temp_backup_path(backup_path: str):
     """
     Remove the temporary files that exist at the backup path location
@@ -164,18 +165,11 @@ if __name__ == '__main__':
     log_file: str = os.path.expanduser("/var/log/minecraft_backup/log.txt")
     rclone_sync_path: str = "onedrive:rclone/backup/bedrock-server/"
 
-
-    server_name: str = "survival"
-    backup_path: str = os.path.expanduser("/tmp/bedrock-server/backups")
-    #backup_path: str = os.path.expanduser("~/projects/bedrock-server/backups")
-    log_file: str = os.path.expanduser("~/log.txt")
-    rclone_sync_path: str = "onedrive:rclone/backup/bedrock-server/"
-
-
     # These values SHOULD NOT be modified before running the server
     worlds_path: str = get_server_binds()
     docker_attach: str = f"docker attach {server_name}"
     rclone_config: str = os.path.expanduser("~/.config/rclone/rclone.conf")
+    # -------
 
     path = pathlib.Path(worlds_path)
 
