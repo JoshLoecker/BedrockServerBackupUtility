@@ -177,6 +177,7 @@ if __name__ == '__main__':
     Logging.log_to_screen("Attached to docker container")
 
     query_result: str = query_save_server(child)
+    print(query_result)
     Logging.log_to_screen("Queried server for files")
 
     files_list = get_files_dictionary(query_result)
