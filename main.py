@@ -1,5 +1,6 @@
 import datetime
 import docker
+import logging
 import os
 import pathlib
 import pexpect
@@ -142,6 +143,11 @@ def rclone_upload() -> bool:
     Upload items in the temp_backup_path to the rclone_path path
     :return: True if upload successful, otherwise False
     """
+    logging.basicConfig(
+        filename=log_file,
+        level=logging.INFO,
+        format="%(asctime)s %(name)s [%(levelname)s]: %(message)s")
+
     with open(rclone_config, "r") as i_stream:
         cfg: str = i_stream.read()
 
@@ -185,7 +191,7 @@ if __name__ == '__main__':
     # These values SHOULD be modified before running the server
     server_name: str = "survival"
     temp_backup_path: str = os.path.expanduser("/tmp/bedrock-server-backups")
-    log_file: str = os.path.expanduser("/var/log/minecraft_backup/log.txt")
+    log_file: str = os.path.expanduser("/opt/minecraft_backup/log.txt")
     rclone_sync_path: str = "onedrive:rclone/backup/bedrock-server/1.18"
 
     # These values SHOULD NOT be modified before running the server
