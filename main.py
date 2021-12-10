@@ -1,6 +1,5 @@
 import datetime
 import docker
-import logging
 import os
 import pathlib
 import pexpect
@@ -143,10 +142,6 @@ def rclone_upload() -> bool:
     Upload items in the temp_backup_path to the rclone_path path
     :return: True if upload successful, otherwise False
     """
-    logging.basicConfig(
-        filename=log_file,
-        level=logging.INFO,
-        format="%(asctime)s %(name)s [%(levelname)s]: %(message)s")
 
     with open(rclone_config, "r") as i_stream:
         cfg: str = i_stream.read()
