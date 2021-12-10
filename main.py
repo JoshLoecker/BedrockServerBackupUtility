@@ -176,6 +176,7 @@ def rename_backup_folder() -> str:
     print(f"Previous: {previous_folder_path}")
     print(f"New: {new_folder_path}")
 
+    shutil.rmtree(new_folder_path, ignore_errors=True)
     shutil.move(previous_folder_path, new_folder_path)
 
     return new_folder_path
