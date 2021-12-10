@@ -171,7 +171,10 @@ def zip_temp_backup() -> str:
     file_name = f"{year}-{month}-{day}-{backup_name[0]}"
 
     zip_file_name = os.path.join(temp_backup_path, file_name)
-    shutil.make_archive(zip_file_name, "zip", temp_backup_path)
+    shutil.make_archive(base_name=zip_file_name,    # File name with path, exclude extension (/home/USER/file)
+                        format="zip",               # File extension
+                        root_dir="/tmp",            # Where to save the archive
+                        base_dir=temp_backup_path)  # Where to create archive from
     return f"{zip_file_name}.zip"
 
 
@@ -196,26 +199,13 @@ if __name__ == '__main__':
     # -------
 
     path = pathlib.Path(worlds_path)
-
     child: pexpect.pty_spawn.spawn = pexpect.spawn(docker_attach)
-    Logging.log_to_screen("Attached to docker container")
-
     query_result: str = query_save_server(child)
-    Logging.log_to_screen("Queried server for files")
-
     files_list = get_files_dictionary(query_result)
-    Logging.log_to_screen("Collected files list")
-
-    Logging.log_to_screen("Writing to temporary files")
     write_backups(files_list)
-
     temp_zip_file = zip_temp_backup()
     print(temp_zip_file)
 
-    Logging.log_to_screen("Starting upload. . .")
     # rclone_upload(temp_zip_file)
-    Logging.log_to_screen("Finished upload")
-
     # remove_temp_backup_path(temp_backup_path)
 
-    Logging.log_to_screen("Done")
