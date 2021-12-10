@@ -173,9 +173,6 @@ def rename_backup_folder() -> str:
     new_folder_name = f"{year}-{month}-{day}-{previous_folder_name}"
     new_folder_path = os.path.join(temp_backup_path, new_folder_name)
 
-    print(f"Previous: {previous_folder_path}")
-    print(f"New: {new_folder_path}")
-
     shutil.rmtree(new_folder_path, ignore_errors=True)
     shutil.move(previous_folder_path, new_folder_path)
 
@@ -208,8 +205,7 @@ if __name__ == '__main__':
     files_list = get_files_dictionary(query_result)
     write_backups(files_list)
     renamed_backup_path = rename_backup_folder()
-    print(renamed_backup_path)
 
     rclone_upload(renamed_backup_path)
-    # remove_temp_backup_path(temp_backup_path)
+    remove_temp_backup_path(temp_backup_path)
 
