@@ -19,3 +19,4 @@ The following packages must be installed in pip
 
 ### Known Issues
 The method for installation & execution is not good and should be better
+This has not been tested with multiple worlds. I have zero idea what will happen if this is ran with multiple minecraft worlds open in docker
