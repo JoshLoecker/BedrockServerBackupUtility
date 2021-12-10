@@ -148,7 +148,7 @@ def rclone_upload(file_path: str) -> bool:
         cfg: str = i_stream.read()
 
     result = rclone.with_config(cfg)
-    if result.sync(file_path, rclone_sync_path):
+    if result.sync(temp_backup_path, rclone_sync_path):
         return True
     else:
         return False
