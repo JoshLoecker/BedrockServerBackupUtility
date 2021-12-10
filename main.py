@@ -137,7 +137,7 @@ def write_backups(files_dict: Dict[str, int]):
             o_stream.write(lines)
 
 
-def rclone_upload() -> bool:
+def rclone_upload(file_path: str) -> bool:
     """
     Upload items in the temp_backup_path to the rclone_path path
     :return: True if upload successful, otherwise False
@@ -147,7 +147,7 @@ def rclone_upload() -> bool:
         cfg: str = i_stream.read()
 
     result = rclone.with_config(cfg)
-    if result.sync(temp_zip_file, rclone_sync_path):
+    if result.sync(file_path, rclone_sync_path):
         return True
     else:
         return False
@@ -212,7 +212,7 @@ if __name__ == '__main__':
     temp_zip_file = zip_temp_backup()
 
     Logging.log_to_screen("Starting upload. . .")
-    rclone_upload()
+    rclone_upload(temp_zip_file)
     Logging.log_to_screen("Finished upload")
 
     remove_temp_backup_path(temp_backup_path)
