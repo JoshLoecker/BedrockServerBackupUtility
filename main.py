@@ -214,7 +214,6 @@ if __name__ == '__main__':
     rclone_upload()
     Logging.log_to_screen("Finished upload")
 
-    remove_temp_backup_path(temp_zip_file)
     remove_temp_backup_path(temp_backup_path)
 
     Logging.log_to_screen("Done")
