@@ -6,6 +6,7 @@ import pexpect
 import rclone
 import shutil
 from typing import Dict
+import zipfile
 
 
 class Logging:
@@ -153,13 +154,13 @@ def rclone_upload(file_path: str) -> bool:
         return False
 
 
-def zip_temp_backup() -> str:
+def rename_backup_folder() -> str:
     """
-    This function will zip the folder under the temp_backup_path
-    After doing so, it will save the file in the following format
+    This function will rename the folder under the temp_backup_path
+    It will save in the following format
         YYYY-MM-DD-[FOLDER NAME].zip
 
-    It will return a string of the new file path
+    It will return a string of the new file path (/tmp/backups/YYY-MM-DD-[FOLDER NAME])
     """
     curr_date = datetime.date.today()
     year = str(curr_date.year)
@@ -168,14 +169,15 @@ def zip_temp_backup() -> str:
 
     backup_name = os.listdir(temp_backup_path)
 
-    file_name = f"{year}-{month}-{day}-{backup_name[0]}"
+    previous_folder_name = os.listdir(temp_backup_path)[0]
+    previous_folder_path = os.path.join(temp_backup_path, previous_folder_name)
 
-    zip_file_name = os.path.join(temp_backup_path, file_name)
-    shutil.make_archive(base_name=zip_file_name,    # File name with path, exclude extension (/home/USER/file)
-                        format="zip",               # File extension
-                        root_dir="/tmp",            # Where to save the archive
-                        base_dir=temp_backup_path)  # Where to create archive from
-    return f"{zip_file_name}.zip"
+    new_folder_name = f"{year}-{month}-{day}-{previous_folder_name}"
+    new_folder_path = os.path.join(temp_backup_path, new_folder_name)
+
+    shutil.move(previous_folder_path, new_folder_path)
+
+    return new_folder_path
 
 
 def remove_temp_backup_path(backup_path: str):
