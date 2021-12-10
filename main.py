@@ -210,11 +210,12 @@ if __name__ == '__main__':
     write_backups(files_list)
 
     temp_zip_file = zip_temp_backup()
+    print(temp_zip_file)
 
     Logging.log_to_screen("Starting upload. . .")
-    rclone_upload(temp_zip_file)
+    # rclone_upload(temp_zip_file)
     Logging.log_to_screen("Finished upload")
 
-    remove_temp_backup_path(temp_backup_path)
+    # remove_temp_backup_path(temp_backup_path)
 
     Logging.log_to_screen("Done")
