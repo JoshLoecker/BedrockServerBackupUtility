@@ -186,7 +186,7 @@ if __name__ == '__main__':
     server_name: str = "survival"
     temp_backup_path: str = os.path.expanduser("/tmp/bedrock-server-backups")
     log_file: str = os.path.expanduser("/var/log/minecraft_backup/log.txt")
-    rclone_sync_path: str = "onedrive:rclone/backup/bedrock-server/"
+    rclone_sync_path: str = "onedrive:rclone/backup/bedrock-server/1.18"
 
     # These values SHOULD NOT be modified before running the server
     worlds_path: str = get_server_binds()
