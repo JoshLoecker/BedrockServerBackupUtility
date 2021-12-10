@@ -50,6 +50,8 @@ def query_save_server(child: pexpect.pty_spawn.spawn) -> str:
     child.sendline("save query")
     child.expect(["Data .+"])
     save_query_result: str = child.after.decode()
+    print("HERE")
+    print(save_query_result)
 
     child.sendline("save resume")
     child.expect(["Changes to the world are resumed.", "A previous save has not been completed."])
@@ -177,7 +179,6 @@ if __name__ == '__main__':
     Logging.log_to_screen("Attached to docker container")
 
     query_result: str = query_save_server(child)
-    print(query_result)
     Logging.log_to_screen("Queried server for files")
 
     files_list = get_files_dictionary(query_result)
