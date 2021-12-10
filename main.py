@@ -48,7 +48,7 @@ def query_save_server(child: pexpect.pty_spawn.spawn) -> str:
     child.expect(["Saving...", "The command is already running"])
 
     child.sendline("save query")
-    child.expect(["Data .+"])
+    child.expect(["Data .+\n.+"])
     save_query_result: str = child.after.decode()
     print("HERE")
     print(save_query_result)
