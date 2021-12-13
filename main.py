@@ -143,15 +143,14 @@ def rclone_upload(file_path: str) -> bool:
     Upload items in the temp_backup_path to the rclone_path path
     :return: True if upload successful, otherwise False
     """
+    cfg: str = open(rclone_config, "r").read()
+    rclone_agent = rclone.with_config(cfg)
 
-    with open(rclone_config, "r") as i_stream:
-        cfg: str = i_stream.read()
+    valid_backup: bool = False
+    if rclone_agent.copy(file_path, rclone_sync_path):
+        valid_backup = True
 
-    result = rclone.with_config(cfg)
-    if result.sync(temp_backup_path, rclone_sync_path):
-        return True
-    else:
-        return False
+    return valid_backup
 
 
 def rename_backup_folder() -> str:
