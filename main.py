@@ -205,6 +205,7 @@ if __name__ == '__main__':
     write_backups(files_list)
     renamed_backup_path = rename_backup_folder()
 
-    rclone_upload(renamed_backup_path)
+    rclone_upload(temp_backup_path)
+    # rclone_upload(renamed_backup_path)
     # remove_temp_backup_path(temp_backup_path)
 
