@@ -206,5 +206,5 @@ if __name__ == '__main__':
     renamed_backup_path = rename_backup_folder()
 
     rclone_upload(renamed_backup_path)
-    remove_temp_backup_path(temp_backup_path)
+    # remove_temp_backup_path(temp_backup_path)
 
