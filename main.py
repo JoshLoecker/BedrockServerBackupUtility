@@ -202,10 +202,10 @@ if __name__ == '__main__':
     child: pexpect.pty_spawn.spawn = pexpect.spawn(docker_attach)
     query_result: str = query_save_server(child)
     files_list = get_files_dictionary(query_result)
+
     write_backups(files_list)
-    renamed_backup_path = rename_backup_folder()
+    rename_backup_folder()
 
     rclone_upload(temp_backup_path)
-    # rclone_upload(renamed_backup_path)
-    # remove_temp_backup_path(temp_backup_path)
+    remove_temp_backup_path(temp_backup_path)
 
