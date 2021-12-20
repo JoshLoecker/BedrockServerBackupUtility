@@ -10,7 +10,7 @@ from typing import Dict
 import zipfile
 
 
-def get_server_binds(server_name: str) -> str:
+def get_server_binds() -> str:
     api: docker.APIClient = docker.APIClient()
     logging.info(f"server_name: {server_name}")
     binds = api.inspect_container(server_name)["HostConfig"]
@@ -178,7 +178,8 @@ def remove_temp_backup_path(backup_path: str):
     shutil.rmtree(os.path.expanduser(backup_path))
 
 
-def main():
+
+if __name__ == '__main__':
     # Logging parameters
     log_file = "/opt/minecraft_backup/log.txt"
     log_level = logging.INFO  # log anything above an INFO level
@@ -194,7 +195,7 @@ def main():
     rclone_sync_path: str = "onedrive:rclone/backup/bedrock-server/1.18"
 
     # These values SHOULD NOT be modified before running the server
-    worlds_path: str = get_server_binds(server_name)
+    worlds_path: str = get_server_binds()
     docker_attach: str = f"docker attach {server_name}"
     rclone_config: str = os.path.expanduser("~/.config/rclone/rclone.conf")
     # -------
@@ -209,7 +210,3 @@ def main():
 
     rclone_upload(temp_backup_path)
     remove_temp_backup_path(temp_backup_path)
-
-
-if __name__ == '__main__':
-    main()
