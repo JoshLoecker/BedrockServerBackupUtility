@@ -12,7 +12,6 @@ import zipfile
 
 def get_server_binds() -> str:
     api: docker.APIClient = docker.APIClient()
-    logging.info(f"server_name: {server_name}")
     binds = api.inspect_container(server_name)["HostConfig"]
 
     mount_point = ""
@@ -25,7 +24,8 @@ def get_server_binds() -> str:
     mount_point = os.path.join(mount_point, "worlds")
 
     if mount_point == "worlds":
-        logging.error(f"Unable to find mount point '/data' in server '{server_name}'")
+        logging.critical(f"Unable to find mount point '/data' in server '{server_name}'")
+        exit(1)
 
     return mount_point
 
@@ -39,7 +39,8 @@ def query_save_server(child: pexpect.pty_spawn.spawn) -> str:
     :return: A string containing the result of the 'save query' command
     """
     child.sendline("save hold")
-    child.expect(["Saving...", "The command is already running"])
+    # child.expect(["Saving...", "The command is already running"], timeout=3)
+    child.expect("testing incorrect item")
 
     child.sendline("save query")
     child.expect(["Data .+\n.+"])
