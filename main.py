@@ -38,16 +38,28 @@ def query_save_server(child: pexpect.pty_spawn.spawn) -> str:
     :param child: The pexpect child process
     :return: A string containing the result of the 'save query' command
     """
-    child.sendline("save hold")
-    # child.expect(["Saving...", "The command is already running"], timeout=3)
-    child.expect("testing incorrect item", timeout=3)
+    commands = ["save hold", "save query", "save resume"]
+    expectations = [["Saving...", "The command is already running"],
+                    ["Data .+\n.+"],
+                    ["Changes to the world are resumed.", "A previous save has not been completed."]]
 
-    child.sendline("save query")
-    child.expect(["Data .+\n.+"])
-    save_query_result: str = child.after.decode()
+    error: bool = False
+    save_query_result: str = ""
+    for i, (command, expectation) in enumerate(zip(commands, expectations)):
+        if error:
+            exit(1)
 
-    child.sendline("save resume")
-    child.expect(["Changes to the world are resumed.", "A previous save has not been completed."])
+        try:
+            child.sendline(command)
+            child.expect(expectation, timeout=3)
+
+            if command == "save query":
+                save_query_result: str = child.after.decode()
+
+        except pexpect.exceptions.TIMEOUT:
+            logging.error(f"Unable to find {expectation} in command {command} to server {server_name}")
+            error = True
+
 
     child.sendcontrol("p")
     child.sendcontrol("q")
@@ -140,8 +152,11 @@ def rclone_upload(file_path: str) -> bool:
     rclone_agent = rclone.with_config(cfg)
 
     valid_backup: bool = False
+
+    logging.info(f"Starting upload of {file_path} to OneDrive")
     if rclone_agent.copy(file_path, rclone_sync_path):
         valid_backup = True
+    logging.info("Upload complete")
 
     return valid_backup
 
