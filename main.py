@@ -40,7 +40,7 @@ def query_save_server(child: pexpect.pty_spawn.spawn) -> str:
     """
     child.sendline("save hold")
     # child.expect(["Saving...", "The command is already running"], timeout=3)
-    child.expect("testing incorrect item")
+    child.expect("testing incorrect item", timeout=3)
 
     child.sendline("save query")
     child.expect(["Data .+\n.+"])
