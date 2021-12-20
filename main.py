@@ -161,15 +161,19 @@ def rename_backup_folder() -> str:
 
     It will return a string of the new file path (/tmp/backups/YYY-MM-DD-[FOLDER NAME])
     """
-    curr_date = datetime.date.today()
-    year = str(curr_date.year)
-    month = f"{curr_date.month:02d}"
-    day = f"{curr_date.day:02d}"
+
+    current_date = datetime.datetime.now()
+    year = f"{current_date.year}"
+    month = f"{current_date.month:02d}"
+    day = f"{current_date.day:02d}"
+    hour = f"{current_date.hour:02d}"
+    minute = f"{current_date.minute:02d}"
+    second = f"{current_date.second:02d}"
 
     previous_folder_name = os.listdir(temp_backup_path)[0]
     previous_folder_path = os.path.join(temp_backup_path, previous_folder_name)
 
-    new_folder_name = f"{year}-{month}-{day}-{previous_folder_name}"
+    new_folder_name = f"{year}-{month}-{day}_{hour}-{minute}-{second}-{previous_folder_name}"
     new_folder_path = os.path.join(temp_backup_path, new_folder_name)
 
     shutil.rmtree(new_folder_path, ignore_errors=True)
