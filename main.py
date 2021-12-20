@@ -1,5 +1,6 @@
 import datetime
 import docker
+import logging
 import os
 import pathlib
 import pexpect
@@ -7,20 +8,6 @@ import rclone
 import shutil
 from typing import Dict
 import zipfile
-
-
-class Logging:
-    """
-    A simple logging class to write things to the screen or to the log file
-    """
-    @staticmethod
-    def log_to_screen(message: str):
-        print(message)
-
-    @staticmethod
-    def log_to_file(log_file: str, message: str,):
-        with open(log_file, "a") as o_stream:
-            o_stream.write(message)
 
 
 def get_server_binds() -> str:
@@ -35,6 +22,7 @@ def get_server_binds() -> str:
             break
 
     mount_point = os.path.join(mount_point, "worlds")
+    logging.info(f"mount point: {mount_point}")
     return mount_point
 
 
@@ -189,7 +177,15 @@ def remove_temp_backup_path(backup_path: str):
     shutil.rmtree(os.path.expanduser(backup_path))
 
 
-if __name__ == '__main__':
+def main():
+    # Logging parameters
+    log_file = "/opt/minecraft_backup/log.txt"
+    log_level = logging.INFO  # log anything above an INFO level
+    log_mode = "a"  # append
+    log_format = "%(asctime)s %(levelname)s\t:  %(message)s"  # Should not be changed
+    date_format = "%Y/%m/%d %H:%M:%S"
+    logging.basicConfig(filename=log_file, level=log_level, filemode=log_mode, format=log_format, datefmt=date_format)
+
     # These values SHOULD be modified before running the server
     server_name: str = "survival"
     temp_backup_path: str = os.path.expanduser("/tmp/bedrock-server-backups")
@@ -213,3 +209,6 @@ if __name__ == '__main__':
     rclone_upload(temp_backup_path)
     remove_temp_backup_path(temp_backup_path)
 
+
+if __name__ == '__main__':
+    main()
