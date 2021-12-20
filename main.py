@@ -10,7 +10,7 @@ from typing import Dict
 import zipfile
 
 
-def get_server_binds() -> str:
+def get_server_binds(server_name: str) -> str:
     api: docker.APIClient = docker.APIClient()
     logging.info(f"server_name: {server_name}")
     binds = api.inspect_container(server_name)["HostConfig"]
@@ -194,7 +194,7 @@ def main():
     rclone_sync_path: str = "onedrive:rclone/backup/bedrock-server/1.18"
 
     # These values SHOULD NOT be modified before running the server
-    worlds_path: str = get_server_binds()
+    worlds_path: str = get_server_binds(server_name)
     docker_attach: str = f"docker attach {server_name}"
     rclone_config: str = os.path.expanduser("~/.config/rclone/rclone.conf")
     # -------
