@@ -23,7 +23,10 @@ def get_server_binds() -> str:
             break
 
     mount_point = os.path.join(mount_point, "worlds")
-    logging.info(f"mount point: {mount_point}")
+
+    if mount_point == "worlds":
+        logging.error(f"Unable to find mount point '/data' in server '{server_name}'")
+
     return mount_point
 
 
