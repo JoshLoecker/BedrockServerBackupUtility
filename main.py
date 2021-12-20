@@ -12,6 +12,7 @@ import zipfile
 
 def get_server_binds() -> str:
     api: docker.APIClient = docker.APIClient()
+    logging.info(f"server_name: {server_name}")
     binds = api.inspect_container(server_name)["HostConfig"]
 
     mount_point = ""
