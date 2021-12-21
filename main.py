@@ -128,7 +128,6 @@ def write_backups(files_dict: Dict[str, int]):
     :param files_dict: A dictionary containing input file paths as the keys and bytes to read as values
     :return: None
     """
-    logging.info(files_dict)
     for i, file_name in enumerate(files_dict):
 
         save_file_path: os.path = os.path.join(temp_backup_path, file_name)
@@ -152,9 +151,11 @@ def rclone_upload(file_path: str) -> bool:
     cfg: str = open(rclone_config, "r").read()
     rclone_agent = rclone.with_config(cfg)
 
+    logging.info(f"{rclone_agent.log.name}")
+
     valid_backup: bool = False
 
-    logging.info(f"Starting upload of {file_path} to OneDrive")
+    logging.info(f"Starting upload")
     if rclone_agent.copy(file_path, rclone_sync_path):
         valid_backup = True
     logging.info("Upload complete")
@@ -211,7 +212,6 @@ if __name__ == '__main__':
     # These values SHOULD be modified before running the server
     server_name: str = "survival"
     temp_backup_path: str = os.path.expanduser("/tmp/bedrock-server-backups")
-    log_file: str = os.path.expanduser("/opt/minecraft_backup/log.txt")
     rclone_sync_path: str = "onedrive:rclone/backup/bedrock-server/1.18"
 
     # These values SHOULD NOT be modified before running the server
