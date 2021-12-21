@@ -128,6 +128,7 @@ def write_backups(files_dict: Dict[str, int]):
     :param files_dict: A dictionary containing input file paths as the keys and bytes to read as values
     :return: None
     """
+    logging.info(files_dict)
     for i, file_name in enumerate(files_dict):
 
         save_file_path: os.path = os.path.join(temp_backup_path, file_name)
