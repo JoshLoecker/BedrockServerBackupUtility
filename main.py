@@ -151,7 +151,7 @@ def rclone_upload(file_path: str) -> bool:
     cfg: str = open(rclone_config, "r").read()
     rclone_agent = rclone.with_config(cfg)
 
-    logging.info(f"{rclone_agent.log.name}")
+    logging.info(f"{rclone_agent.log.root.handlers[0]}")
 
     valid_backup: bool = False
 
