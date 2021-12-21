@@ -149,9 +149,9 @@ def rclone_upload(file_path: str) -> bool:
     :return: True if upload successful, otherwise False
     """
     cfg: str = open(rclone_config, "r").read()
+    logging.info(cfg)
     rclone_agent = rclone.with_config(cfg)
 
-    logging.info(f"{rclone_agent.log.root.handlers[0].baseFilename}")
 
     valid_backup: bool = False
 
