@@ -143,7 +143,7 @@ def write_backups(files_dict: Dict[str, int]):
             o_stream.write(lines)
 
 
-def rclone_upload(file_path: str) -> bool:
+def rclone_upload(file_path: str) -> None:
     """
     Upload items in the temp_backup_path to the rclone_path path
     :return: True if upload successful, otherwise False
@@ -151,16 +151,11 @@ def rclone_upload(file_path: str) -> bool:
     cfg: str = open(rclone_config, "r").read()
     rclone_agent = rclone.with_config(cfg)
 
-
-    valid_backup: bool = False
-
-    logging.info(f"Starting upload")
-
-    if rclone_agent.copy(file_path, rclone_sync_path, flags=["--log-file", log_file, "--progress"]):
-        valid_backup = True
-    logging.info("Upload complete")
-
-    return valid_backup
+    for path in upload_paths:
+        remote_name = path.split(":")[0]
+        logging.info(f"Starting upload to {remote_name}")
+        rclone_agent.copy(file_path, path)
+        logging.info(f"Finished upload to {remote_name}")
 
 
 def rename_backup_folder() -> str:
@@ -212,7 +207,7 @@ if __name__ == '__main__':
     # These values SHOULD be modified before running the server
     server_name: str = "survival"
     temp_backup_path: str = os.path.expanduser("/tmp/bedrock-server-backups")
-    rclone_sync_path: str = "onedrive:rclone/backup/bedrock-server/1.18"
+    upload_paths: list[str] = ["onedrive:rclone/backup/bedrock-server/1.18"]
 
     # These values SHOULD NOT be modified before running the server
     worlds_path: str = get_server_binds()
