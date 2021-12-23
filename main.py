@@ -149,14 +149,13 @@ def rclone_upload(file_path: str) -> bool:
     :return: True if upload successful, otherwise False
     """
     cfg: str = open(rclone_config, "r").read()
-    logging.info(cfg)
     rclone_agent = rclone.with_config(cfg)
 
 
     valid_backup: bool = False
 
     logging.info(f"Starting upload")
-    if rclone_agent.copy(file_path, rclone_sync_path):
+    if rclone_agent.copy(file_path, rclone_sync_path, flags=[f"--log-file" {log_file}]):
         valid_backup = True
     logging.info("Upload complete")
 
