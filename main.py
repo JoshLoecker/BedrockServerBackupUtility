@@ -156,7 +156,7 @@ def rclone_upload(file_path: str) -> bool:
 
     logging.info(f"Starting upload")
 
-    if rclone_agent.copy(file_path, rclone_sync_path, flags=["--log-file", log_file]):
+    if rclone_agent.copy(file_path, rclone_sync_path, flags=["--log-file", log_file, "--progress"]):
         valid_backup = True
     logging.info("Upload complete")
 
