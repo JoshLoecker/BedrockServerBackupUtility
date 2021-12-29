@@ -178,7 +178,7 @@ def rename_backup_folder() -> str:
     previous_folder_name = os.listdir(temp_backup_path)[0]
     previous_folder_path = os.path.join(temp_backup_path, previous_folder_name)
 
-    new_folder_name = f"{year}-{month}-{day}_{hour}-{minute}-{second}-{previous_folder_name}"
+    new_folder_name = f"{year}-{month}-{day}--{hour}-{minute}-{second}--{previous_folder_name}"
     new_folder_path = os.path.join(temp_backup_path, new_folder_name)
 
     shutil.rmtree(new_folder_path, ignore_errors=True)
@@ -192,7 +192,6 @@ def remove_temp_backup_path(backup_path: str):
     Remove the temporary files that exist at the backup path location
     """
     shutil.rmtree(os.path.expanduser(backup_path))
-
 
 
 if __name__ == '__main__':
